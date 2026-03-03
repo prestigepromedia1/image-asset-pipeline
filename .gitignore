@@ -1,0 +1,25 @@
+# Credentials & auth
+credentials.json
+token.json
+token.pickle
+*.pickle
+*-service-account*.json
+
+# Product catalog (may contain business-specific data)
+products.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
