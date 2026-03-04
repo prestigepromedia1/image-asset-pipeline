@@ -2,6 +2,10 @@
 
 AI-powered image categorization, metadata renaming, and indexing. Turn a folder of `IMG_4530.jpg` files into organized, properly named, searchable assets.
 
+<p align="center">
+  <img src="demo.svg" alt="Demo of image-asset-pipeline rename command" width="750">
+</p>
+
 ## The Problem
 
 Brands, agencies, and studios have thousands of product images with meaningless filenames like `DSC_0042.jpg` or `IMG_4530.jpg`. These are invisible to DAMs, search, SEO, and AI tools. Manual sorting takes hours.

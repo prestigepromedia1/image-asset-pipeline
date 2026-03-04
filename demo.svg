@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" font-family="'JetBrains Mono','SF Mono','Consolas',monospace" font-size="13">
+  <style>
+    .bg { fill: #1e1e2e; }
+    .chrome { fill: #313244; }
+    .title { fill: #cdd6f4; font-size: 13px; text-anchor: middle; }
+    .dot1 { fill: #f38ba8; }
+    .dot2 { fill: #f9e2af; }
+    .dot3 { fill: #a6e3a1; }
+    .prompt { fill: #89b4fa; }
+    .cmd { fill: #cdd6f4; }
+    .dim { fill: #6c7086; }
+    .accent { fill: #f9e2af; }
+    .green { fill: #a6e3a1; }
+    .red { fill: #f38ba8; }
+    .file { fill: #bac2de; }
+    .arrow { fill: #89b4fa; }
+    .line { opacity: 0; }
+
+    @keyframes appear {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .l1  { animation: appear 0.01s 0.3s both; }
+    .l2  { animation: appear 0.01s 0.6s both; }
+    .l3  { animation: appear 0.01s 0.8s both; }
+    .l4  { animation: appear 0.01s 1.0s both; }
+    .l5  { animation: appear 0.01s 1.2s both; }
+    .l6  { animation: appear 0.01s 1.4s both; }
+    .l7  { animation: appear 0.01s 1.6s both; }
+    .l8  { animation: appear 0.01s 2.2s both; }
+    .l9  { animation: appear 0.01s 2.5s both; }
+    .l10 { animation: appear 0.01s 2.7s both; }
+    .l11 { animation: appear 0.01s 2.9s both; }
+    .l12 { animation: appear 0.01s 3.1s both; }
+    .l13 { animation: appear 0.01s 3.3s both; }
+    .l14 { animation: appear 0.01s 3.5s both; }
+    .l15 { animation: appear 0.01s 3.7s both; }
+    .l16 { animation: appear 0.01s 3.9s both; }
+    .l17 { animation: appear 0.01s 4.1s both; }
+    .l18 { animation: appear 0.01s 4.5s both; }
+    .l19 { animation: appear 0.01s 4.8s both; }
+    .l20 { animation: appear 0.01s 5.1s both; }
+    .l21 { animation: appear 0.01s 5.4s both; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .line { opacity: 1; animation: none; }
+    }
+  </style>
+
+  <!-- Window chrome -->
+  <rect class="bg" width="800" height="480" rx="10"/>
+  <rect class="chrome" width="800" height="36" rx="10 10 0 0"/>
+  <circle class="dot1" cx="20" cy="18" r="6"/>
+  <circle class="dot2" cx="40" cy="18" r="6"/>
+  <circle class="dot3" cx="60" cy="18" r="6"/>
+  <text class="title" x="400" y="22">image-asset-pipeline</text>
+
+  <!-- Content area -->
+  <g transform="translate(20, 52)">
+
+    <!-- Before: messy folder -->
+    <text class="line l1">
+      <tspan class="dim">~/photos/Acme Coffee/Lifestyle$</tspan>
+      <tspan class="cmd"> ls</tspan>
+    </text>
+    <text y="20" class="line l2">
+      <tspan class="file">DSC_0042.jpg  IMG_4530.jpg  IMG_7821.jpg  photo_2024.png</tspan>
+    </text>
+    <text y="40" class="line l3">
+      <tspan class="file">IMG_4531.jpg  DSC_0099.jpg  IMG_8834.jpg  IMG_4535.jpg</tspan>
+    </text>
+
+    <!-- Separator -->
+    <text y="68" class="line l4">
+      <tspan class="dim">---</tspan>
+    </text>
+
+    <!-- Run rename command -->
+    <text y="92" class="line l5">
+      <tspan class="dim">$</tspan>
+      <tspan class="cmd"> image-asset-pipeline rename ./photos --local --sort created</tspan>
+    </text>
+
+    <text y="116" class="line l6">
+      <tspan class="accent">============================================================</tspan>
+    </text>
+    <text y="136" class="line l7">
+      <tspan class="accent">Image Asset Pipeline - RENAME</tspan>
+    </text>
+
+    <!-- Auto-detected product -->
+    <text y="164" class="line l8">
+      <tspan class="green">  Product (from folder): Acme Coffee</tspan>
+    </text>
+    <text y="184" class="line l9">
+      <tspan class="dim">  Sort: by date added (oldest first)</tspan>
+    </text>
+
+    <!-- Results -->
+    <text y="212" class="line l10">
+      <tspan class="cmd">8 files to rename</tspan>
+    </text>
+
+    <text y="240" class="line l11">
+      <tspan class="dim">  DSC_0042.jpg           </tspan>
+      <tspan class="arrow"> -> </tspan>
+      <tspan class="green">Acme-Coffee_Lifestyle_001.jpg</tspan>
+    </text>
+    <text y="260" class="line l12">
+      <tspan class="dim">  IMG_4530.jpg           </tspan>
+      <tspan class="arrow"> -> </tspan>
+      <tspan class="green">Acme-Coffee_Lifestyle_002.jpg</tspan>
+    </text>
+    <text y="280" class="line l13">
+      <tspan class="dim">  IMG_4531.jpg           </tspan>
+      <tspan class="arrow"> -> </tspan>
+      <tspan class="green">Acme-Coffee_Lifestyle_003.jpg</tspan>
+    </text>
+    <text y="300" class="line l14">
+      <tspan class="dim">  IMG_7821.jpg           </tspan>
+      <tspan class="arrow"> -> </tspan>
+      <tspan class="green">Acme-Coffee_Lifestyle_004.jpg</tspan>
+    </text>
+    <text y="320" class="line l15">
+      <tspan class="dim">  photo_2024.png         </tspan>
+      <tspan class="arrow"> -> </tspan>
+      <tspan class="green">Acme-Coffee_Lifestyle_005.png</tspan>
+    </text>
+    <text y="340" class="line l16">
+      <tspan class="dim">  DSC_0099.jpg           </tspan>
+      <tspan class="arrow"> -> </tspan>
+      <tspan class="green">Acme-Coffee_Lifestyle_006.jpg</tspan>
+    </text>
+    <text y="360" class="line l17">
+      <tspan class="dim">  ... and 2 more</tspan>
+    </text>
+
+    <!-- Final result -->
+    <text y="392" class="line l18">
+      <tspan class="green">Renamed: 8  Errors: 0</tspan>
+    </text>
+    <text y="412" class="line l19">
+      <tspan class="dim">Log: rename_log_20260304_001234.csv</tspan>
+    </text>
+  </g>
+</svg>
