@@ -1,7 +1,11 @@
-google-auth>=2.0.0
-google-auth-oauthlib>=1.0.0
-google-auth-httplib2>=0.1.0
-google-api-python-client>=2.0.0
-google-cloud-vision>=3.0.0
+# Core (always needed for Vision analysis)
 anthropic>=0.18.0
 Pillow>=10.0.0
+
+# Optional: Google Cloud Vision OCR (faster + cheaper, but not required)
+# google-cloud-vision>=3.0.0
+
+# Optional: Google Drive support (only needed without --local)
+# google-auth>=2.0.0
+# google-auth-oauthlib>=1.0.0
+# google-api-python-client>=2.0.0

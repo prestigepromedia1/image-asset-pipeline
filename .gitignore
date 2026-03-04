@@ -5,8 +5,18 @@ token.pickle
 *.pickle
 *-service-account*.json
 
-# Product catalog (may contain business-specific data)
+# Category catalog (may contain business-specific data)
+categories.json
 products.json
+
+# Logs & reports
+organize_log_*.csv
+rename_log_*.csv
+rename_plan_*.csv
+asset_index_*.csv
+asset_index_*.json
+dedup_report_*.csv
+folder_summary_*.txt
 
 # Python
 __pycache__/

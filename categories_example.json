@@ -1,0 +1,30 @@
+{
+  "categories": [
+    {
+      "title": "Bio-Cleanse 5.5 Face Wash",
+      "keywords": ["bio-cleanse", "biocleanse", "face wash", "cleanser"]
+    },
+    {
+      "title": "NMF Hydrator Barrier Repair",
+      "keywords": ["nmf hydrator", "hydrator", "barrier repair"]
+    },
+    {
+      "title": "Vitamin C-FK Brightening Complex",
+      "keywords": ["vitamin c", "c-fk", "brightening"]
+    }
+  ],
+  "label_text_map": {
+    "BIO-CLEANSE 5.5": "Bio-Cleanse 5.5 Face Wash",
+    "BIO-CLEANSE": "Bio-Cleanse 5.5 Face Wash",
+    "NMF HYDRATOR": "NMF Hydrator Barrier Repair",
+    "NMF-HYDRATOR": "NMF Hydrator Barrier Repair",
+    "VITAMIN C-FK": "Vitamin C-FK Brightening Complex",
+    "C-FK": "Vitamin C-FK Brightening Complex"
+  },
+  "style_categories": [
+    "Product Shot",
+    "White Background",
+    "Lifestyle",
+    "Model"
+  ]
+}

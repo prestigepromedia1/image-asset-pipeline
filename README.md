@@ -1,137 +1,184 @@
-# Google Drive Photo Organizer
+# Image Asset Pipeline
 
-AI-powered photo organizer that automatically sorts product photos into folders using a hybrid OCR + Vision pipeline.
+AI-powered image categorization, metadata renaming, and indexing. Turn a folder of `IMG_4530.jpg` files into organized, properly named, searchable assets.
 
-## How It Works
+## The Problem
 
-1. **Filename matching** - Fast keyword-based matching (free, no API calls)
-2. **Google Cloud Vision OCR** - Reads text on product labels with high accuracy
-3. **Claude Vision fallback** - AI visual analysis for photos where text isn't readable
-4. **Style classification** (optional) - Sorts into sub-folders: Product Shot, White Background, Lifestyle, Model
+Brands, agencies, and studios have thousands of product images with meaningless filenames like `DSC_0042.jpg` or `IMG_4530.jpg`. These are invisible to DAMs, search, SEO, and AI tools. Manual sorting takes hours.
 
-Low-confidence matches go to a `_Review` folder for manual sorting.
+## The Pipeline
 
-## Setup
-
-### 1. Install Dependencies
-
-```bash
-pip install -r requirements.txt
+```
+organize  ->  rename  ->  index
 ```
 
-### 2. Google Drive API
+| Step | What it does | Example |
+|------|-------------|---------|
+| **organize** | AI sorts images into category folders | `IMG_4530.jpg` moves to `NMF Hydrator/` |
+| **rename** | Bulk rename with metadata-rich names | Becomes `NMF-Hydrator-Barrier-Repair_product-shot_001.jpg` |
+| **index** | Export CSV/JSON asset manifest | Spreadsheet with every file, category, path, link |
+| **dedup** | Find duplicate images by checksum | Reports exact dupes + same-name variants |
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Enable the **Google Drive API**
-3. Create OAuth 2.0 credentials (Desktop app)
-4. Download as `credentials.json` in this directory
+Works with **local folders** or **Google Drive**.
 
-### 3. Google Cloud Vision API
-
-1. In the same Cloud project, enable **Cloud Vision API**
-2. Set up authentication ([Application Default Credentials](https://cloud.google.com/docs/authentication/application-default-credentials) or service account)
-
-### 4. Anthropic API Key
+## Quick Start
 
 ```bash
-export ANTHROPIC_API_KEY="your-key-here"
+pip install anthropic Pillow
+export ANTHROPIC_API_KEY="your-key"
 ```
 
-### 5. Product Catalog
-
-Copy the example and customize for your products:
+### Organize a local folder
 
 ```bash
-cp products_example.json products.json
+python image_asset_pipeline.py organize ./product-photos --local --catalog categories.json
 ```
 
-Edit `products.json` with your products:
+### Rename organized files with metadata
+
+```bash
+python image_asset_pipeline.py rename ./product-photos/Organized --local
+```
+
+### Export asset index
+
+```bash
+python image_asset_pipeline.py index ./product-photos/Organized --local --format csv
+```
+
+### Find duplicates
+
+```bash
+python image_asset_pipeline.py dedup ./product-photos --local
+```
+
+## Google Drive Mode
+
+Same commands, without `--local`:
+
+```bash
+python image_asset_pipeline.py organize DRIVE_FOLDER_ID --catalog categories.json
+python image_asset_pipeline.py rename DRIVE_FOLDER_ID
+python image_asset_pipeline.py index DRIVE_FOLDER_ID --format both
+python image_asset_pipeline.py dedup DRIVE_FOLDER_ID
+```
+
+Requires Google Drive API credentials (see [Drive Setup](#google-drive-setup) below).
+
+## How Organize Works
+
+Three-tier identification pipeline:
+
+1. **Filename matching** -- Free, instant. Checks filenames against your keyword catalog.
+2. **Google Cloud Vision OCR** -- Reads text on product labels/packaging. Optional but highly accurate.
+3. **Claude Vision fallback** -- AI visual analysis for images where text isn't readable.
+
+Low-confidence matches go to `_Review/` for manual sorting.
+
+## Category Catalog
+
+Create `categories.json` (see `categories_example.json`):
 
 ```json
 {
-  "products": [
+  "categories": [
     {
       "title": "Your Product Name",
       "keywords": ["keyword1", "keyword2"]
     }
   ],
   "label_text_map": {
-    "LABEL TEXT ON PRODUCT": "Your Product Name"
-  }
+    "LABEL TEXT ON PACKAGING": "Your Product Name"
+  },
+  "style_categories": ["Product Shot", "White Background", "Lifestyle", "Model"]
 }
 ```
 
-### 6. Get Your Drive Folder ID
+The `label_text_map` maps text that OCR reads on product labels to your canonical category names.
 
-From the Google Drive URL: `https://drive.google.com/drive/folders/YOUR_FOLDER_ID`
+## Naming Templates
 
-## Usage
+Control how `rename` names your files:
 
 ```bash
-# Basic usage
-python gdrive_photo_organizer.py YOUR_FOLDER_ID
-
-# Organize in place (no parent folder created)
-python gdrive_photo_organizer.py YOUR_FOLDER_ID --in-place
-
-# Adjust confidence threshold
-python gdrive_photo_organizer.py YOUR_FOLDER_ID --confidence 0.75
-
-# Process in batches of 50
-python gdrive_photo_organizer.py YOUR_FOLDER_ID --batch 50
-
-# Continue from batch 3
-python gdrive_photo_organizer.py YOUR_FOLDER_ID --batch 50 --start-batch 3
-
-# Include style sub-folders (Phase 2)
-python gdrive_photo_organizer.py YOUR_FOLDER_ID --with-styles
-
-# Style-only pass on an already-organized product folder
-python gdrive_photo_organizer.py PRODUCT_FOLDER_ID --style-only
+python image_asset_pipeline.py rename ./Organized --local --template "{category}_{style}_{seq}"
 ```
 
-## Output Structure
+| Token | Description | Example |
+|-------|-------------|---------|
+| `{category}` | Category/product name (slugified) | `NMF-Hydrator-Barrier-Repair` |
+| `{style}` | Style sub-folder (if any) | `product-shot` |
+| `{seq}` | Sequence number (001, 002...) | `001` |
+| `{date}` | Today's date | `20260303` |
 
-```
-Source Folder/
-  Organized Photos/
-    Product Alpha/
-      photo1.jpg
-      photo2.jpg
-    Product Beta Cream/
-      cream_shot.png
-    _Review/
-      unclear_image.jpg
-    _Multiple Products/
-      group_shot.jpg
+Default: `{category}_{style}_{seq}`
+
+Use `--dry-run` to preview renames before executing.
+
+## Command Reference
+
+### organize
+
+```bash
+python image_asset_pipeline.py organize SOURCE [options]
+  --local              Source is a local directory
+  --catalog FILE       Category catalog JSON (default: categories.json)
+  --credentials FILE   Google OAuth credentials (default: credentials.json)
+  --in-place           Don't create "Organized" parent folder
+  --confidence N       Match threshold (default: 0.60)
+  --batch N            Process N images at a time
+  --start-batch N      Resume from batch N
+  --dry-run            Preview without moving files
 ```
 
-With `--with-styles`:
+### rename
 
+```bash
+python image_asset_pipeline.py rename SOURCE [options]
+  --local              Source is local
+  --template TPL       Naming template (default: {category}_{style}_{seq})
+  --dry-run            Preview without renaming
 ```
-Product Alpha/
-  Product Shot/
-  White Background/
-  Lifestyle/
-  Model/
+
+### index
+
+```bash
+python image_asset_pipeline.py index SOURCE [options]
+  --local              Source is local
+  --format FMT         csv, json, or both (default: csv)
+  --output FILE        Output file path
+  --checksums          Include MD5 checksums (slower)
 ```
+
+### dedup
+
+```bash
+python image_asset_pipeline.py dedup SOURCE [options]
+  --local              Source is local
+```
+
+## Google Drive Setup
+
+Only needed if you're not using `--local`.
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Enable **Google Drive API**
+3. Create OAuth 2.0 credentials (Desktop app)
+4. Download as `credentials.json`
+5. Install: `pip install google-auth google-auth-oauthlib google-api-python-client`
+
+Optional for OCR: Enable **Cloud Vision API** and install `google-cloud-vision`.
 
 ## Cost
 
-- **Google Drive API**: Free within quotas
-- **Cloud Vision OCR**: ~$1.50 per 1000 images
-- **Claude Vision**: ~$0.01-0.03 per image (only used when OCR fails)
-- **Filename matching**: Free (tried first)
+| Component | Cost |
+|-----------|------|
+| Filename matching | Free |
+| Cloud Vision OCR | ~$1.50 per 1000 images |
+| Claude Vision | ~$0.01-0.03 per image (fallback only) |
+| Google Drive API | Free within quotas |
 
-## Troubleshooting
-
-**"Missing credentials.json"** - Download from Google Cloud Console.
-
-**"Token expired"** - Delete `token.json` and re-run.
-
-**"Cloud Vision unavailable"** - Check that Vision API is enabled and credentials are set up.
-
-**Low accuracy** - Improve your `products.json` label_text_map with more text variants.
+Filename matching is tried first. OCR handles most labeled products. Claude Vision is only used when OCR fails.
 
 ## License
 
