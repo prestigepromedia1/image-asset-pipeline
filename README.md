@@ -14,12 +14,40 @@ organize  ->  rename  ->  index
 
 | Step | What it does | Example |
 |------|-------------|---------|
-| **organize** | AI sorts images into category folders | `IMG_4530.jpg` moves to `NMF Hydrator/` |
-| **rename** | Bulk rename with metadata-rich names | Becomes `NMF-Hydrator-Barrier-Repair_product-shot_001.jpg` |
+| **organize** | AI sorts images into category folders | `IMG_4530.jpg` moves to `Blue Mountain Blend/` |
+| **rename** | Bulk rename with metadata-rich names | Becomes `Blue-Mountain-Blend_product-shot_001.jpg` |
 | **index** | Export CSV/JSON asset manifest | Spreadsheet with every file, category, path, link |
 | **dedup** | Find duplicate images by checksum | Reports exact dupes + same-name variants |
 
 Works with **local folders** or **Google Drive**.
+
+## Architecture
+
+```mermaid
+flowchart TD
+    A["Image File"] --> B{"Filename\nKeyword Match?"}
+    B -->|"match found"| C["Assign Category\nconfidence: 0.85"]
+    B -->|"no match"| D{"OCR\nEnabled?"}
+    D -->|"yes"| E["Cloud Vision OCR\nRead Label Text"]
+    D -->|"no"| G["Claude Vision\nAnalyze Image"]
+    E --> F{"Text Matches\nlabel_text_map?"}
+    F -->|"match found"| H["Assign Category\nconfidence: 0.90"]
+    F -->|"no match"| G
+    G --> I{"Confidence\n>= 0.60?"}
+    I -->|"yes"| J["Assign Category\n+ Style Classification"]
+    I -->|"no"| K["Move to _Review/\nfor Manual Sort"]
+    C --> L["Move to\nCategory Folder"]
+    H --> L
+    J --> L
+```
+
+**Three-tier identification:**
+
+1. **Filename matching** -- Free, instant. Checks filenames against your keyword catalog.
+2. **Google Cloud Vision OCR** -- Reads text on product labels/packaging. Optional but highly accurate.
+3. **Claude Vision fallback** -- AI visual analysis for images where text isn't readable.
+
+Low-confidence matches go to `_Review/` for manual sorting.
 
 ## Quick Start
 
@@ -65,16 +93,6 @@ python image_asset_pipeline.py dedup DRIVE_FOLDER_ID
 
 Requires Google Drive API credentials (see [Drive Setup](#google-drive-setup) below).
 
-## How Organize Works
-
-Three-tier identification pipeline:
-
-1. **Filename matching** -- Free, instant. Checks filenames against your keyword catalog.
-2. **Google Cloud Vision OCR** -- Reads text on product labels/packaging. Optional but highly accurate.
-3. **Claude Vision fallback** -- AI visual analysis for images where text isn't readable.
-
-Low-confidence matches go to `_Review/` for manual sorting.
-
 ## Category Catalog
 
 Create `categories.json` (see `categories_example.json`):
@@ -106,7 +124,7 @@ python image_asset_pipeline.py rename ./Organized --local --template "{category}
 
 | Token | Description | Example |
 |-------|-------------|---------|
-| `{category}` | Category/product name (slugified) | `NMF-Hydrator-Barrier-Repair` |
+| `{category}` | Category/product name (slugified) | `Blue-Mountain-Blend` |
 | `{style}` | Style sub-folder (if any) | `product-shot` |
 | `{seq}` | Sequence number (001, 002...) | `001` |
 | `{date}` | Today's date | `20260303` |

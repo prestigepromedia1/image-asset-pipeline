@@ -13,8 +13,8 @@ Commands:
 Works with Google Drive folders or local directories.
 
 Pipeline:
-  1. organize  -> Sort IMG_4530.jpg into "NMF Hydrator/" folder
-  2. rename    -> Rename to "NMF-Hydrator-Barrier-Repair_product-shot_001.jpg"
+  1. organize  -> Sort IMG_4530.jpg into "Blue Mountain Blend/" folder
+  2. rename    -> Rename to "Blue-Mountain-Blend_product-shot_001.jpg"
   3. index     -> Export spreadsheet with every file, category, confidence, link
 """
 

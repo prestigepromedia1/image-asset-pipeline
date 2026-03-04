@@ -1,25 +1,25 @@
 {
   "categories": [
     {
-      "title": "Bio-Cleanse 5.5 Face Wash",
-      "keywords": ["bio-cleanse", "biocleanse", "face wash", "cleanser"]
+      "title": "Blue Mountain Blend",
+      "keywords": ["blue mountain", "mountain blend", "signature blend"]
     },
     {
-      "title": "NMF Hydrator Barrier Repair",
-      "keywords": ["nmf hydrator", "hydrator", "barrier repair"]
+      "title": "Ceramic Pour-Over Dripper",
+      "keywords": ["pour-over", "pour over", "ceramic dripper", "dripper"]
     },
     {
-      "title": "Vitamin C-FK Brightening Complex",
-      "keywords": ["vitamin c", "c-fk", "brightening"]
+      "title": "Travel Tumbler 16oz",
+      "keywords": ["travel tumbler", "tumbler", "16oz", "to-go"]
     }
   ],
   "label_text_map": {
-    "BIO-CLEANSE 5.5": "Bio-Cleanse 5.5 Face Wash",
-    "BIO-CLEANSE": "Bio-Cleanse 5.5 Face Wash",
-    "NMF HYDRATOR": "NMF Hydrator Barrier Repair",
-    "NMF-HYDRATOR": "NMF Hydrator Barrier Repair",
-    "VITAMIN C-FK": "Vitamin C-FK Brightening Complex",
-    "C-FK": "Vitamin C-FK Brightening Complex"
+    "BLUE MOUNTAIN BLEND": "Blue Mountain Blend",
+    "BLUE MOUNTAIN": "Blue Mountain Blend",
+    "CERAMIC POUR-OVER": "Ceramic Pour-Over Dripper",
+    "POUR-OVER DRIPPER": "Ceramic Pour-Over Dripper",
+    "TRAVEL TUMBLER": "Travel Tumbler 16oz",
+    "16OZ TUMBLER": "Travel Tumbler 16oz"
   },
   "style_categories": [
     "Product Shot",
