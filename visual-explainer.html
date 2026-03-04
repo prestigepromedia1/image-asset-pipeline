@@ -3,74 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image Asset Pipeline</title>
+<title>Image Asset Pipeline — Architecture</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* ============ THEME — Blueprint: deep slate/teal ============ */
   :root {
-    --font-display: 'Instrument Serif', Georgia, serif;
     --font-body: 'DM Sans', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --font-mono: 'Fira Code', 'SF Mono', Consolas, monospace;
 
-    --bg: #faf9f7;
+    --bg: #f4f7f9;
     --surface: #ffffff;
-    --surface2: #f3f1ed;
-    --surface-elevated: #fffdf9;
-    --border: rgba(0, 0, 0, 0.07);
-    --border-bright: rgba(0, 0, 0, 0.14);
-    --text: #1e1b16;
-    --text-dim: #7a7265;
+    --surface2: #eaf0f4;
+    --surface-elevated: #ffffff;
+    --surface-recessed: #e4ecf1;
+    --border: rgba(0, 40, 80, 0.08);
+    --border-bright: rgba(0, 40, 80, 0.16);
+    --text: #0f2b3c;
+    --text-dim: #5a7d8f;
 
-    --navy: #1e3a5f;
-    --navy-dim: rgba(30, 58, 95, 0.07);
-    --gold: #b8860b;
-    --gold-dim: rgba(184, 134, 11, 0.08);
-    --emerald: #166534;
-    --emerald-dim: rgba(22, 101, 52, 0.07);
-    --amber: #92400e;
-    --amber-dim: rgba(146, 64, 14, 0.07);
-    --rose: #9f1239;
-    --rose-dim: rgba(159, 18, 57, 0.06);
+    --teal: #0891b2;
+    --teal-dim: rgba(8, 145, 178, 0.08);
+    --slate: #0369a1;
+    --slate-dim: rgba(3, 105, 161, 0.07);
+    --amber: #b45309;
+    --amber-dim: rgba(180, 83, 9, 0.07);
+    --emerald: #047857;
+    --emerald-dim: rgba(4, 120, 87, 0.07);
+    --rose: #be123c;
+    --rose-dim: rgba(190, 18, 60, 0.06);
+    --copper: #a16207;
+    --copper-dim: rgba(161, 98, 7, 0.07);
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #141210;
-      --surface: #1e1c19;
-      --surface2: #28251f;
-      --surface-elevated: #2a2720;
-      --border: rgba(255, 255, 255, 0.06);
-      --border-bright: rgba(255, 255, 255, 0.12);
-      --text: #ede8e0;
-      --text-dim: #9e9488;
+      --bg: #0c1820;
+      --surface: #132430;
+      --surface2: #1a2e3c;
+      --surface-elevated: #1e3648;
+      --surface-recessed: #0f1e28;
+      --border: rgba(140, 200, 240, 0.08);
+      --border-bright: rgba(140, 200, 240, 0.16);
+      --text: #d4e4ef;
+      --text-dim: #7ba4bb;
 
-      --navy: #7db4e0;
-      --navy-dim: rgba(125, 180, 224, 0.1);
-      --gold: #d4a73a;
-      --gold-dim: rgba(212, 167, 58, 0.1);
-      --emerald: #4ade80;
-      --emerald-dim: rgba(74, 222, 128, 0.08);
+      --teal: #22d3ee;
+      --teal-dim: rgba(34, 211, 238, 0.12);
+      --slate: #38bdf8;
+      --slate-dim: rgba(56, 189, 248, 0.1);
       --amber: #fbbf24;
-      --amber-dim: rgba(251, 191, 36, 0.08);
-      --rose: #fda4af;
-      --rose-dim: rgba(253, 164, 175, 0.08);
+      --amber-dim: rgba(251, 191, 36, 0.1);
+      --emerald: #34d399;
+      --emerald-dim: rgba(52, 211, 153, 0.1);
+      --rose: #fb7185;
+      --rose-dim: rgba(251, 113, 133, 0.1);
+      --copper: #fcd34d;
+      --copper-dim: rgba(252, 211, 77, 0.1);
     }
   }
 
+  /* ============ RESET + BASE ============ */
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--bg);
+    background-color: var(--bg);
     background-image:
-      radial-gradient(ellipse at 15% 5%, var(--gold-dim) 0%, transparent 45%),
-      radial-gradient(ellipse at 85% 90%, var(--navy-dim) 0%, transparent 40%);
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
     color: var(--text);
     font-family: var(--font-body);
     padding: 48px 40px;
     min-height: 100vh;
   }
 
+  /* ============ ANIMATION ============ */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(14px); }
     to { opacity: 1; transform: translateY(0); }
@@ -97,226 +106,204 @@
     }
   }
 
+  /* ============ LAYOUT ============ */
   .container {
-    max-width: 1100px;
+    max-width: 1120px;
     margin: 0 auto;
   }
 
-  /* ============ HERO ============ */
-  .hero {
-    margin-bottom: 56px;
-  }
-  .hero h1 {
-    font-family: var(--font-display);
-    font-size: 52px;
-    font-weight: 400;
-    letter-spacing: -0.5px;
+  /* ============ TYPOGRAPHY ============ */
+  h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
     line-height: 1.1;
     margin-bottom: 8px;
-    color: var(--text);
+    text-wrap: balance;
   }
-  .hero-accent {
-    color: var(--gold);
-  }
-  .hero .tagline {
+
+  .subtitle {
     font-family: var(--font-mono);
     font-size: 13px;
     color: var(--text-dim);
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     letter-spacing: 0.3px;
   }
-  .hero .lead {
-    font-size: 17px;
-    line-height: 1.7;
-    color: var(--text-dim);
-    max-width: 640px;
-  }
-  .hero .lead strong { color: var(--text); font-weight: 600; }
 
-  /* ============ PROBLEM / SOLUTION BAR ============ */
-  .ps-bar {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 0;
-    align-items: stretch;
-    margin-bottom: 56px;
+  .lead {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text-dim);
+    max-width: 680px;
+    margin-bottom: 48px;
   }
-  .ps-card {
+
+  .lead strong { color: var(--text); font-weight: 600; }
+
+  h2 {
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  h2 .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* ============ SECTION CARD ============ */
+  .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 24px 28px;
+    margin-bottom: 24px;
   }
-  .ps-card--problem {
-    border-color: var(--rose-dim);
-  }
-  .ps-card--solution {
-    border-color: var(--emerald-dim);
+
+  .card--hero {
     background: var(--surface-elevated);
+    border-color: var(--border-bright);
+    box-shadow: 0 6px 28px rgba(0, 30, 60, 0.06);
+    padding: 32px 36px;
   }
-  .ps-label {
+
+  .card--recessed {
+    background: var(--surface-recessed);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.04);
+  }
+
+  /* ============ PIPELINE ROW ============ */
+  .pipeline {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .pipeline-step {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    min-width: 160px;
+    flex: 1;
+    position: relative;
+  }
+
+  .pipeline-step .step-badge {
     font-family: var(--font-mono);
     font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1.8px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .ps-label .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
     display: inline-block;
-  }
-  .ps-card--problem .ps-label { color: var(--rose); }
-  .ps-card--problem .ps-label .dot { background: var(--rose); }
-  .ps-card--solution .ps-label { color: var(--emerald); }
-  .ps-card--solution .ps-label .dot { background: var(--emerald); }
-
-  .ps-card .example {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--text-dim);
-  }
-  .ps-card .example .file {
-    display: inline-block;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 1px 7px;
+    padding: 2px 8px;
     border-radius: 4px;
-    font-size: 12px;
-    margin: 2px 1px;
   }
-  .ps-arrow {
+
+  .pipeline-step .step-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .pipeline-step .step-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  .pipeline-step code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  .ps--teal { border-color: var(--teal-dim); }
+  .ps--teal .step-badge { background: var(--teal-dim); color: var(--teal); }
+  .ps--teal code { background: var(--teal-dim); color: var(--teal); }
+
+  .ps--slate { border-color: var(--slate-dim); }
+  .ps--slate .step-badge { background: var(--slate-dim); color: var(--slate); }
+  .ps--slate code { background: var(--slate-dim); color: var(--slate); }
+
+  .ps--amber { border-color: var(--amber-dim); }
+  .ps--amber .step-badge { background: var(--amber-dim); color: var(--amber); }
+  .ps--amber code { background: var(--amber-dim); color: var(--amber); }
+
+  .ps--emerald { border-color: var(--emerald-dim); }
+  .ps--emerald .step-badge { background: var(--emerald-dim); color: var(--emerald); }
+  .ps--emerald code { background: var(--emerald-dim); color: var(--emerald); }
+
+  .pipeline-arrow {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0 16px;
+    padding: 0 6px;
+    flex-shrink: 0;
   }
-  .ps-arrow svg {
-    width: 32px;
-    height: 32px;
+
+  .pipeline-arrow svg {
+    width: 24px;
+    height: 24px;
     fill: none;
-    stroke: var(--gold);
+    stroke: var(--border-bright);
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  /* ============ PIPELINE SECTION ============ */
-  .section-header {
+  /* ============ FLOW ARROW ============ */
+  .flow-arrow {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 6px 0;
     margin-bottom: 24px;
   }
-  .section-header .num {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--gold);
-    background: var(--gold-dim);
-    padding: 3px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-  }
-  .section-header h2 {
-    font-family: var(--font-display);
-    font-size: 30px;
-    font-weight: 400;
+
+  .flow-arrow svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: var(--border-bright);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  /* ============ PIPELINE CARDS ============ */
-  .pipeline {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    margin-bottom: 56px;
-    align-items: stretch;
-  }
-  .pipe-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 24px 20px;
-    position: relative;
-  }
-  .pipe-card:first-child { border-radius: 12px 0 0 12px; }
-  .pipe-card:last-child { border-radius: 0 12px 12px 0; }
-  .pipe-card + .pipe-card { border-left: none; }
-
-  .pipe-card::after {
-    content: '';
-    position: absolute;
-    right: -1px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 10px solid var(--border-bright);
-    z-index: 2;
-  }
-  .pipe-card:last-child::after { display: none; }
-
-  .pipe-num {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 8px;
-  }
-  .pipe-name {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .pipe-desc {
-    font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.6;
-    margin-bottom: 12px;
-  }
-  .pipe-example {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 10px;
-    color: var(--text-dim);
-    overflow-wrap: break-word;
-    line-height: 1.5;
-  }
-
-  .pipe-card:nth-child(1) .pipe-num { color: var(--navy); }
-  .pipe-card:nth-child(2) .pipe-num { color: var(--gold); }
-  .pipe-card:nth-child(3) .pipe-num { color: var(--emerald); }
-  .pipe-card:nth-child(4) .pipe-num { color: var(--amber); }
-
-  /* ============ AI IDENTIFICATION TIERS ============ */
-  .tiers {
-    margin-bottom: 56px;
-  }
+  /* ============ TIER GRID ============ */
   .tier-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 16px;
   }
-  .tier-card {
+
+  .tier {
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
     position: relative;
     overflow: hidden;
   }
-  .tier-card::before {
+
+  .tier::before {
     content: '';
     position: absolute;
     top: 0;
@@ -324,114 +311,113 @@
     right: 0;
     height: 3px;
   }
-  .tier-card:nth-child(1)::before { background: var(--emerald); }
-  .tier-card:nth-child(2)::before { background: var(--navy); }
-  .tier-card:nth-child(3)::before { background: var(--gold); }
 
-  .tier-badge {
+  .tier--1::before { background: var(--emerald); }
+  .tier--2::before { background: var(--amber); }
+  .tier--3::before { background: var(--slate); }
+
+  .tier-num {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    display: inline-block;
-    margin-bottom: 12px;
-  }
-  .tier-card:nth-child(1) .tier-badge {
-    color: var(--emerald); background: var(--emerald-dim);
-  }
-  .tier-card:nth-child(2) .tier-badge {
-    color: var(--navy); background: var(--navy-dim);
-  }
-  .tier-card:nth-child(3) .tier-badge {
-    color: var(--gold); background: var(--gold-dim);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
   }
 
-  .tier-card h3 {
+  .tier--1 .tier-num { color: var(--emerald); }
+  .tier--2 .tier-num { color: var(--amber); }
+  .tier--3 .tier-num { color: var(--slate); }
+
+  .tier-title {
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 6px;
   }
-  .tier-card .tier-desc {
-    font-size: 13px;
+
+  .tier-detail {
+    font-size: 12px;
     color: var(--text-dim);
     line-height: 1.6;
     margin-bottom: 10px;
   }
-  .tier-card .tier-meta {
+
+  .tier-cost {
     font-family: var(--font-mono);
     font-size: 11px;
-    color: var(--text-dim);
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
   }
-  .tier-card .tier-meta span {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+
+  .tier--1 .tier-cost { background: var(--emerald-dim); color: var(--emerald); }
+  .tier--2 .tier-cost { background: var(--amber-dim); color: var(--amber); }
+  .tier--3 .tier-cost { background: var(--slate-dim); color: var(--slate); }
+
+  /* ============ TWO-COL ============ */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
   }
-  .tier-card .tier-meta .indicator {
+
+  /* ============ FEATURE LIST ============ */
+  .feat-list {
+    list-style: none;
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  .feat-list li {
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .feat-list li::before {
+    content: '';
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
+    position: absolute;
+    left: 0;
+    top: 11px;
   }
 
-  .tier-flow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 20px;
+  .feat--teal li::before { background: var(--teal); }
+  .feat--slate li::before { background: var(--slate); }
+  .feat--amber li::before { background: var(--amber); }
+
+  .feat-list code {
     font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-  .tier-flow svg {
-    width: 18px;
-    height: 18px;
-    fill: none;
-    stroke: var(--border-bright);
-    stroke-width: 2;
-    stroke-linecap: round;
-    flex-shrink: 0;
-  }
-  .tier-flow .step {
-    padding: 4px 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    white-space: nowrap;
-  }
-  .tier-flow .step--active {
-    border-color: var(--gold);
-    color: var(--gold);
+    font-size: 11px;
+    background: var(--teal-dim);
+    color: var(--teal);
+    padding: 1px 5px;
+    border-radius: 3px;
   }
 
-  /* ============ MERMAID SECTION ============ */
+  /* ============ MERMAID CONTAINER ============ */
   .mermaid-wrap {
     position: relative;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 32px 24px;
+    border-radius: 14px;
+    padding: 28px 24px;
     overflow: auto;
-    margin-bottom: 56px;
+    margin-bottom: 24px;
   }
+
   .mermaid-wrap .mermaid {
     display: flex;
     justify-content: center;
     transition: transform 0.2s ease;
     transform-origin: top center;
   }
+
   .zoom-controls {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 10px;
+    right: 10px;
     display: flex;
     gap: 2px;
     z-index: 10;
@@ -440,6 +426,7 @@
     border-radius: 6px;
     padding: 2px;
   }
+
   .zoom-controls button {
     width: 28px;
     height: 28px;
@@ -455,157 +442,150 @@
     justify-content: center;
     transition: background 0.15s, color 0.15s;
   }
+
   .zoom-controls button:hover {
     background: var(--border);
     color: var(--text);
   }
+
+  .mermaid-wrap { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .mermaid-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
+  .mermaid-wrap::-webkit-scrollbar-track { background: transparent; }
+  .mermaid-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .mermaid-wrap::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
   .mermaid-wrap.is-zoomed { cursor: grab; }
   .mermaid-wrap.is-panning { cursor: grabbing; user-select: none; }
 
+  /* Mermaid SVG overrides */
   .mermaid .nodeLabel {
     font-family: var(--font-body) !important;
-    font-size: 14px !important;
+    font-size: 15px !important;
+    color: var(--text) !important;
   }
   .mermaid .edgeLabel {
     font-family: var(--font-mono) !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
     color: var(--text-dim) !important;
     background-color: var(--bg) !important;
   }
   .mermaid .edgeLabel rect { fill: var(--bg) !important; }
-  .mermaid .nodeLabel { color: var(--text) !important; }
+  .mermaid .node rect,
+  .mermaid .node circle,
+  .mermaid .node polygon { stroke-width: 1.5px !important; }
+  .mermaid .edge-pattern-solid { stroke-width: 1.5px !important; }
 
-  /* ============ FEATURE GRID ============ */
-  .features {
-    margin-bottom: 56px;
-  }
-  .feat-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .feat-card {
-    background: var(--surface);
+  /* ============ CALLOUT ============ */
+  .callout {
+    background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px 22px;
-    transition: border-color 0.2s;
-  }
-  .feat-card:hover { border-color: var(--border-bright); }
-  .feat-card h4 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .feat-card p {
-    font-size: 12px;
+    border-left: 3px solid var(--teal);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    font-size: 13px;
+    line-height: 1.65;
     color: var(--text-dim);
-    line-height: 1.6;
   }
-  .feat-card code {
+
+  .callout strong { color: var(--text); font-weight: 600; }
+
+  .callout code {
     font-family: var(--font-mono);
     font-size: 11px;
-    background: var(--navy-dim);
-    color: var(--navy);
+    background: var(--teal-dim);
+    color: var(--teal);
     padding: 1px 5px;
     border-radius: 3px;
   }
 
-  /* ============ QUICKSTART ============ */
-  .quickstart {
-    background: var(--surface);
+  /* ============ CODE BLOCK ============ */
+  .code-block {
+    background: var(--surface-recessed);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px 32px;
-    margin-bottom: 56px;
+    border-radius: 10px;
+    padding: 18px 22px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+    overflow-x: auto;
   }
-  .quickstart h3 {
-    font-family: var(--font-display);
-    font-size: 22px;
-    margin-bottom: 16px;
+
+  .code-block .dim { color: var(--text-dim); }
+  .code-block .hl { color: var(--teal); }
+  .code-block .val { color: var(--amber); }
+
+  /* ============ LEGEND ============ */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
   }
-  .qs-steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
   }
-  .qs-step {
+
+  .legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  /* ============ INPUT PILLS ============ */
+  .input-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .input-pill {
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 16px;
-  }
-  .qs-step .qs-num {
+    padding: 10px 20px;
     font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    color: var(--gold);
-  }
-  .qs-step .qs-cmd {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 1.6;
-    color: var(--text);
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-  }
-  .qs-step .qs-note {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 6px;
-  }
-
-  /* ============ COST CALLOUT ============ */
-  .callout {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--gold);
-    border-radius: 0 10px 10px 0;
-    padding: 18px 22px;
-    margin-bottom: 40px;
-  }
-  .callout strong { color: var(--text); font-weight: 600; }
-  .callout p {
     font-size: 13px;
-    line-height: 1.7;
-    color: var(--text-dim);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.2s;
   }
 
-  /* ============ FOOTER ============ */
-  .footer {
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-dim);
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
+  .input-pill:hover { border-color: var(--border-bright); }
+
+  .input-pill svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--teal);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-  .footer a {
-    color: var(--navy);
-    text-decoration: none;
-  }
-  .footer a:hover { text-decoration: underline; }
+
+  /* ============ SPACER ============ */
+  .spacer { height: 40px; }
+  .spacer-sm { height: 24px; }
 
   /* ============ RESPONSIVE ============ */
-  @media (max-width: 900px) {
-    body { padding: 24px 16px; }
-    .hero h1 { font-size: 36px; }
-    .pipeline { grid-template-columns: 1fr 1fr; }
-    .pipe-card { border-radius: 10px !important; border: 1px solid var(--border) !important; }
-    .pipe-card::after { display: none; }
+  @media (max-width: 768px) {
+    body { padding: 20px 16px; }
+    h1 { font-size: 28px; }
     .tier-grid { grid-template-columns: 1fr; }
-    .ps-bar { grid-template-columns: 1fr; gap: 12px; }
-    .ps-arrow { transform: rotate(90deg); padding: 8px 0; }
-    .feat-grid { grid-template-columns: 1fr; }
-    .qs-steps { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 600px) {
-    .pipeline { grid-template-columns: 1fr; }
-    .tier-flow { flex-wrap: wrap; justify-content: center; }
+    .two-col { grid-template-columns: 1fr; }
+    .pipeline { flex-wrap: wrap; gap: 8px; }
+    .pipeline-arrow { display: none; }
+    .pipeline-step { min-width: 100%; }
+    .input-row { flex-direction: column; align-items: stretch; }
   }
 </style>
 </head>
@@ -613,271 +593,271 @@
 
 <div class="container">
 
-  <!-- HERO -->
-  <div class="hero anim" style="--i:0">
-    <h1>Image Asset <span class="hero-accent">Pipeline</span></h1>
-    <p class="tagline">organize &rarr; rename &rarr; index &rarr; dedup</p>
-    <p class="lead">
-      Turn a folder of <strong>IMG_4530.jpg</strong> files into organized, metadata-rich,
-      searchable assets. AI-powered categorization with a three-tier identification pipeline
-      that works on <strong>local folders</strong> or <strong>Google Drive</strong>.
+  <!-- ============ HERO ============ -->
+  <h1 class="anim" style="--i:0">Image Asset Pipeline</h1>
+  <p class="subtitle anim" style="--i:1">organize &rarr; rename &rarr; index &rarr; dedup</p>
+  <p class="lead anim" style="--i:2">
+    Turn a folder of <strong>IMG_4530.jpg</strong> files into organized, properly named, searchable assets.
+    Three-tier AI identification sorts images by product, then bulk rename gives them
+    metadata-rich filenames. Works with <strong>local folders</strong> or <strong>Google Drive</strong>.
+  </p>
+
+  <!-- ============ INPUT SOURCES ============ -->
+  <div class="card card--hero anim" style="--i:3">
+    <h2><span class="dot" style="background:var(--text-dim)"></span> Input Sources</h2>
+    <div class="input-row">
+      <div class="input-pill">
+        <svg viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+        Local Directory
+      </div>
+      <div class="input-pill">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Google Drive Folder
+      </div>
+      <div class="input-pill">
+        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
+        Category Catalog (JSON)
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow anim" style="--i:4">
+    <svg viewBox="0 0 20 20"><path d="M10 4 L10 16 M6 12 L10 16 L14 12"/></svg>
+    feeds into
+  </div>
+
+  <!-- ============ PIPELINE ============ -->
+  <div class="card anim" style="--i:5">
+    <h2><span class="dot" style="background:var(--teal)"></span> The Pipeline</h2>
+    <div class="pipeline">
+      <div class="pipeline-step ps--teal anim-scale" style="--i:6">
+        <span class="step-badge">Step 1</span>
+        <div class="step-name">organize</div>
+        <div class="step-desc">AI sorts images into category folders. Uses filename matching, OCR, then Claude Vision as fallback.</div>
+      </div>
+      <div class="pipeline-arrow">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </div>
+      <div class="pipeline-step ps--slate anim-scale" style="--i:7">
+        <span class="step-badge">Step 2</span>
+        <div class="step-name">rename</div>
+        <div class="step-desc">Bulk rename with <code>{category}_{style}_{seq}</code> template. Auto-detects product from folder name.</div>
+      </div>
+      <div class="pipeline-arrow">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </div>
+      <div class="pipeline-step ps--amber anim-scale" style="--i:8">
+        <span class="step-badge">Step 3</span>
+        <div class="step-name">index</div>
+        <div class="step-desc">Export CSV or JSON asset manifest with filename, category, path, Drive link, and optional checksums.</div>
+      </div>
+      <div class="pipeline-arrow">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </div>
+      <div class="pipeline-step ps--emerald anim-scale" style="--i:9">
+        <span class="step-badge">Step 4</span>
+        <div class="step-name">dedup</div>
+        <div class="step-desc">Find duplicates by MD5 checksum. Reports exact dupes and same-name variants across folders.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow anim" style="--i:10">
+    <svg viewBox="0 0 20 20"><path d="M10 4 L10 16 M6 12 L10 16 L14 12"/></svg>
+    organize uses three-tier identification
+  </div>
+
+  <!-- ============ MERMAID: Organize Decision Tree ============ -->
+  <div class="card anim" style="--i:11">
+    <h2><span class="dot" style="background:var(--slate)"></span> Classification Decision Tree</h2>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:18px;line-height:1.6">
+      Each image passes through up to three identification tiers. The first match wins.
+      Low-confidence results go to <code style="font-family:var(--font-mono);font-size:11px;background:var(--rose-dim);color:var(--rose);padding:1px 5px;border-radius:3px">_Review/</code> for manual sorting.
     </p>
-  </div>
-
-  <!-- PROBLEM / SOLUTION -->
-  <div class="ps-bar">
-    <div class="ps-card ps-card--problem anim" style="--i:1">
-      <div class="ps-label"><span class="dot"></span> Before</div>
-      <div class="example">
-        <span class="file">DSC_0042.jpg</span>
-        <span class="file">IMG_4530.jpg</span>
-        <span class="file">photo_2024.png</span>
-        <span class="file">IMG_7821.jpg</span><br>
-        Invisible to DAMs, search, SEO, and AI tools
+    <div class="mermaid-wrap">
+      <div class="zoom-controls">
+        <button onclick="zoomDiagram(this, 1.2)" title="Zoom in">+</button>
+        <button onclick="zoomDiagram(this, 0.8)" title="Zoom out">&minus;</button>
+        <button onclick="resetZoom(this)" title="Reset zoom">&#8634;</button>
       </div>
+      <pre class="mermaid">
+        flowchart TD
+          A["Image File"] --> B{"Filename\nKeyword Match?"}
+          B -->|"match"| C["Assign Category\nconfidence: 0.85"]
+          B -->|"no match"| D{"OCR\nEnabled?"}
+          D -->|"yes"| E["Cloud Vision OCR\nRead Label Text"]
+          D -->|"no"| G["Claude Vision\nAnalyze Image"]
+          E --> F{"Text Matches\nlabel_text_map?"}
+          F -->|"match"| H["Assign Category\nconfidence: 0.90"]
+          F -->|"no match"| G
+          G --> I{"Confidence\n>= 0.60?"}
+          I -->|"yes"| J["Assign Category\n+ Style Classification"]
+          I -->|"no"| K["Move to _Review/\nfor Manual Sort"]
+          C --> L["Move to\nCategory Folder"]
+          H --> L
+          J --> L
+      </pre>
     </div>
-    <div class="ps-arrow anim" style="--i:2">
-      <svg viewBox="0 0 32 32"><path d="M8 16h16M20 10l6 6-6 6"/></svg>
-    </div>
-    <div class="ps-card ps-card--solution anim" style="--i:3">
-      <div class="ps-label"><span class="dot"></span> After</div>
-      <div class="example">
-        <span class="file">Blue-Mountain-Blend_product-shot_001.jpg</span>
-        <span class="file">Pour-Over-Dripper_lifestyle_002.jpg</span><br>
-        Categorized, renamed, indexed, deduplicated
-      </div>
-    </div>
-  </div>
-
-  <!-- PIPELINE -->
-  <div class="section-header anim" style="--i:4">
-    <span class="num">PIPELINE</span>
-    <h2>Four Commands</h2>
-  </div>
-
-  <div class="pipeline">
-    <div class="pipe-card anim-scale" style="--i:5">
-      <div class="pipe-num">01 &middot; ORGANIZE</div>
-      <div class="pipe-name">Sort</div>
-      <div class="pipe-desc">AI sorts images into category folders using filename matching, OCR, and Claude Vision.</div>
-      <div class="pipe-example">IMG_4530.jpg<br>&rarr; Blue Mountain Blend/IMG_4530.jpg</div>
-    </div>
-    <div class="pipe-card anim-scale" style="--i:7">
-      <div class="pipe-num">02 &middot; RENAME</div>
-      <div class="pipe-name">Rename</div>
-      <div class="pipe-desc">Bulk rename with metadata-rich names using configurable templates.</div>
-      <div class="pipe-example">IMG_4530.jpg<br>&rarr; Blue-Mountain-Blend_product-shot_001.jpg</div>
-    </div>
-    <div class="pipe-card anim-scale" style="--i:9">
-      <div class="pipe-num">03 &middot; INDEX</div>
-      <div class="pipe-name">Catalog</div>
-      <div class="pipe-desc">Export a CSV or JSON asset manifest with every file, category, and path.</div>
-      <div class="pipe-example">asset_index.csv<br>250 rows, 11 columns</div>
-    </div>
-    <div class="pipe-card anim-scale" style="--i:11">
-      <div class="pipe-num">04 &middot; DEDUP</div>
-      <div class="pipe-name">Clean</div>
-      <div class="pipe-desc">Find exact duplicates by MD5 checksum and same-name variants.</div>
-      <div class="pipe-example">Found 12 duplicate groups<br>38 files can be removed</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald);border:1px solid var(--emerald)"></div> Tier 1: Filename</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--amber);border:1px solid var(--amber)"></div> Tier 2: OCR</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--slate);border:1px solid var(--slate)"></div> Tier 3: Claude Vision</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--rose);border:1px solid var(--rose)"></div> Low confidence</div>
     </div>
   </div>
 
-  <!-- AI IDENTIFICATION TIERS -->
-  <div class="tiers">
-    <div class="section-header anim" style="--i:13">
-      <span class="num">AI ENGINE</span>
-      <h2>Three-Tier Identification</h2>
-    </div>
+  <div class="spacer-sm"></div>
 
-    <div class="tier-flow anim" style="--i:14">
-      <span class="step step--active">Filename Match</span>
-      <svg viewBox="0 0 18 18"><path d="M4 9h10M11 5l4 4-4 4"/></svg>
-      <span class="step">Cloud Vision OCR</span>
-      <svg viewBox="0 0 18 18"><path d="M4 9h10M11 5l4 4-4 4"/></svg>
-      <span class="step">Claude Vision</span>
-      <svg viewBox="0 0 18 18"><path d="M4 9h10M11 5l4 4-4 4"/></svg>
-      <span class="step" style="border-color:var(--rose);color:var(--rose)">_Review/</span>
+  <!-- ============ THREE TIERS ============ -->
+  <h2 class="anim" style="--i:12"><span class="dot" style="background:var(--emerald)"></span> Three-Tier Identification</h2>
+  <div class="tier-grid anim" style="--i:13">
+    <div class="tier tier--1">
+      <div class="tier-num">TIER 1</div>
+      <div class="tier-title">Filename Matching</div>
+      <div class="tier-detail">
+        Instant pattern matching against your keyword catalog.
+        Checks if the image filename contains known product keywords.
+        Fastest and most reliable for well-named source files.
+      </div>
+      <span class="tier-cost">Free</span>
     </div>
-
-    <div class="tier-grid">
-      <div class="tier-card anim" style="--i:15">
-        <div class="tier-badge">TIER 1</div>
-        <h3>Filename Matching</h3>
-        <p class="tier-desc">Checks filenames against keywords in your category catalog. Instant, free, no API calls needed.</p>
-        <div class="tier-meta">
-          <span><span class="indicator" style="background:var(--emerald)"></span> Free</span>
-          <span><span class="indicator" style="background:var(--emerald)"></span> Instant</span>
-          <span><span class="indicator" style="background:var(--emerald)"></span> No API key required</span>
-        </div>
+    <div class="tier tier--2">
+      <div class="tier-num">TIER 2</div>
+      <div class="tier-title">Cloud Vision OCR</div>
+      <div class="tier-detail">
+        Google Cloud Vision reads text on product labels and packaging.
+        Maps detected label text to categories via <code style="font-family:var(--font-mono);font-size:11px">label_text_map</code>.
+        Handles most labeled products without AI.
       </div>
-      <div class="tier-card anim" style="--i:16">
-        <div class="tier-badge">TIER 2</div>
-        <h3>Cloud Vision OCR</h3>
-        <p class="tier-desc">Reads text on product labels and packaging. Maps detected text to categories via your label_text_map.</p>
-        <div class="tier-meta">
-          <span><span class="indicator" style="background:var(--amber)"></span> ~$1.50 / 1000 images</span>
-          <span><span class="indicator" style="background:var(--navy)"></span> Google Cloud Vision API</span>
-          <span><span class="indicator" style="background:var(--emerald)"></span> Optional</span>
-        </div>
+      <span class="tier-cost">~$1.50 / 1K images</span>
+    </div>
+    <div class="tier tier--3">
+      <div class="tier-num">TIER 3</div>
+      <div class="tier-title">Claude Vision</div>
+      <div class="tier-detail">
+        AI visual analysis for images where text isn't readable.
+        Classifies product + style category. Only fires when
+        OCR fails or isn't enabled. Fallback-only.
       </div>
-      <div class="tier-card anim" style="--i:17">
-        <div class="tier-badge">TIER 3</div>
-        <h3>Claude Vision</h3>
-        <p class="tier-desc">AI visual analysis identifies products and classifies image style when text isn't readable.</p>
-        <div class="tier-meta">
-          <span><span class="indicator" style="background:var(--emerald)"></span> ~$0.01-0.03 / image</span>
-          <span><span class="indicator" style="background:var(--gold)"></span> Anthropic API</span>
-          <span><span class="indicator" style="background:var(--navy)"></span> Fallback only</span>
-        </div>
-      </div>
+      <span class="tier-cost">~$0.01-0.03 / image</span>
     </div>
   </div>
 
-  <!-- ORGANIZE FLOWCHART -->
-  <div class="section-header anim" style="--i:18">
-    <span class="num">FLOW</span>
-    <h2>Organize Decision Tree</h2>
-  </div>
+  <div class="spacer"></div>
 
-  <div class="mermaid-wrap anim" style="--i:19">
-    <div class="zoom-controls">
-      <button onclick="zoomDiagram(this, 1.2)" title="Zoom in">+</button>
-      <button onclick="zoomDiagram(this, 0.8)" title="Zoom out">&minus;</button>
-      <button onclick="resetZoom(this)" title="Reset zoom">&#8634;</button>
+  <!-- ============ MODES ============ -->
+  <h2 class="anim" style="--i:14"><span class="dot" style="background:var(--amber)"></span> Storage Modes</h2>
+  <div class="two-col">
+    <div class="card anim" style="--i:15;border-color:var(--teal-dim)">
+      <h2 style="margin-bottom:14px"><span class="dot" style="background:var(--teal)"></span> Local Mode</h2>
+      <ul class="feat-list feat--teal">
+        <li>Pass <code>--local</code> flag to any command</li>
+        <li>Source is a filesystem directory path</li>
+        <li>Files moved/renamed directly on disk</li>
+        <li>No Google credentials needed</li>
+        <li>Sort by name or creation date</li>
+      </ul>
     </div>
-    <pre class="mermaid">
-      flowchart TD
-        A["Image File"] --> B{"Filename\nKeyword Match?"}
-        B -->|"match found"| C["Assign Category\nconfidence: 0.85"]
-        B -->|"no match"| D{"OCR\nEnabled?"}
-        D -->|"yes"| E["Cloud Vision OCR\nRead Label Text"]
-        D -->|"no / unavailable"| G["Claude Vision\nAnalyze Image"]
-        E --> F{"Text Matches\nlabel_text_map?"}
-        F -->|"match found"| H["Assign Category\nconfidence: 0.90"]
-        F -->|"no match"| G
-        G --> I{"Confidence\n>= 0.60?"}
-        I -->|"yes"| J["Assign Category\n+ Style Classification"]
-        I -->|"no"| K["Move to _Review/\nfor Manual Sort"]
-        C --> L["Move to\nCategory Folder"]
-        H --> L
-        J --> L
-
-        classDef green fill:#16653422,stroke:#166534,stroke-width:2px
-        classDef gold fill:#b8860b22,stroke:#b8860b,stroke-width:2px
-        classDef navy fill:#1e3a5f22,stroke:#1e3a5f,stroke-width:2px
-        classDef rose fill:#9f123922,stroke:#9f1239,stroke-width:2px
-
-        class A navy
-        class C,H,J green
-        class E,G gold
-        class K rose
-        class L green
-    </pre>
-  </div>
-
-  <!-- FEATURES -->
-  <div class="features">
-    <div class="section-header anim" style="--i:20">
-      <span class="num">FEATURES</span>
-      <h2>Built For Real Workflows</h2>
-    </div>
-
-    <div class="feat-grid">
-      <div class="feat-card anim" style="--i:21">
-        <h4>Local + Google Drive</h4>
-        <p>Use <code>--local</code> for filesystem operations or pass a Drive folder ID. Same commands, same output.</p>
-      </div>
-      <div class="feat-card anim" style="--i:22">
-        <h4>Naming Templates</h4>
-        <p>Control rename output with <code>--template "{category}_{style}_{seq}"</code>. Tokens: category, style, seq, date.</p>
-      </div>
-      <div class="feat-card anim" style="--i:23">
-        <h4>Dry Run Mode</h4>
-        <p>Preview organize and rename operations with <code>--dry-run</code> before moving or renaming any files.</p>
-      </div>
-      <div class="feat-card anim" style="--i:24">
-        <h4>Category Catalog</h4>
-        <p>Define categories, keywords, label text maps, and style categories in a simple <code>categories.json</code>.</p>
-      </div>
-      <div class="feat-card anim" style="--i:25">
-        <h4>Batch Processing</h4>
-        <p>Process large folders in batches with <code>--batch N</code> and resume with <code>--start-batch N</code>.</p>
-      </div>
-      <div class="feat-card anim" style="--i:26">
-        <h4>Export Formats</h4>
-        <p>Index outputs CSV, JSON, or both. Include MD5 checksums with <code>--checksums</code> for asset verification.</p>
-      </div>
+    <div class="card anim" style="--i:16;border-color:var(--slate-dim)">
+      <h2 style="margin-bottom:14px"><span class="dot" style="background:var(--slate)"></span> Google Drive Mode</h2>
+      <ul class="feat-list feat--slate">
+        <li>Default mode (no <code>--local</code> flag)</li>
+        <li>Source is a Drive folder ID</li>
+        <li>Files organized via Drive API</li>
+        <li>OAuth2 credentials required</li>
+        <li>Sort by name or <code>createdTime</code></li>
+      </ul>
     </div>
   </div>
 
-  <!-- QUICKSTART -->
-  <div class="quickstart anim" style="--i:27">
-    <h3>Quick Start</h3>
-    <div class="qs-steps">
-      <div class="qs-step">
-        <div class="qs-num">INSTALL</div>
-        <div class="qs-cmd">pip install anthropic Pillow</div>
-        <div class="qs-note">Core deps only. Cloud Vision and Drive deps are optional.</div>
-      </div>
-      <div class="qs-step">
-        <div class="qs-num">ORGANIZE</div>
-        <div class="qs-cmd">python image_asset_pipeline.py \
-  organize ./photos \
-  --local --catalog categories.json</div>
-      </div>
-      <div class="qs-step">
-        <div class="qs-num">RENAME + INDEX</div>
-        <div class="qs-cmd">python image_asset_pipeline.py \
-  rename ./photos/Organized --local
-python image_asset_pipeline.py \
-  index ./photos/Organized --local</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COST CALLOUT -->
-  <div class="callout anim" style="--i:28">
-    <p>
-      <strong>Cost-optimized by design.</strong>
-      Filename matching is tried first (free). OCR handles labeled products (~$1.50/1000).
-      Claude Vision is only used as a fallback (~$0.01-0.03/image).
-      For a 2,500-image folder, expect under $10 total.
+  <!-- ============ NAMING TEMPLATE ============ -->
+  <div class="card anim" style="--i:17">
+    <h2><span class="dot" style="background:var(--copper)"></span> Naming Templates</h2>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;line-height:1.6">
+      The <code style="font-family:var(--font-mono);font-size:11px;background:var(--copper-dim);color:var(--copper);padding:1px 5px;border-radius:3px">rename</code> command applies a naming template. Auto-detects the product name from the source folder.
     </p>
+    <div class="two-col" style="margin-bottom:16px">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-bottom:6px;letter-spacing:0.5px">BEFORE</div>
+        <div class="code-block">
+<span class="dim">DSC_0042.jpg
+IMG_4530.jpg
+IMG_7821.jpg
+photo_2024.png</span></div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-bottom:6px;letter-spacing:0.5px">AFTER</div>
+        <div class="code-block">
+<span class="hl">Blue-Mountain-Blend</span>_<span class="val">Lifestyle</span>_001.jpg
+<span class="hl">Blue-Mountain-Blend</span>_<span class="val">Lifestyle</span>_002.jpg
+<span class="hl">Blue-Mountain-Blend</span>_<span class="val">Lifestyle</span>_003.jpg
+<span class="hl">Blue-Mountain-Blend</span>_<span class="val">Lifestyle</span>_004.png</div>
+      </div>
+    </div>
+    <div class="legend" style="margin-bottom:8px">
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--teal)"></div> {category}</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--amber)"></div> {style}</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--text-dim)"></div> {seq}</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald)"></div> {date}</div>
+    </div>
   </div>
 
-  <!-- FOOTER -->
-  <div class="footer anim" style="--i:29">
-    <a href="https://github.com/prestigepromedia1/image-asset-pipeline">github.com/prestigepromedia1/image-asset-pipeline</a>
-    &nbsp;&middot;&nbsp; MIT License
+  <!-- ============ QUICK START ============ -->
+  <div class="card card--recessed anim" style="--i:18">
+    <h2><span class="dot" style="background:var(--teal)"></span> Quick Start</h2>
+    <div class="code-block" style="margin-bottom:14px">
+<span class="dim"># Install</span>
+pip install anthropic Pillow
+
+<span class="dim"># Organize a local folder</span>
+python image_asset_pipeline.py <span class="hl">organize</span> ./photos <span class="val">--local</span> --catalog categories.json
+
+<span class="dim"># Rename organized files</span>
+python image_asset_pipeline.py <span class="hl">rename</span> ./photos/Organized <span class="val">--local</span>
+
+<span class="dim"># Export asset index</span>
+python image_asset_pipeline.py <span class="hl">index</span> ./photos/Organized <span class="val">--local</span> --format csv
+
+<span class="dim"># Find duplicates</span>
+python image_asset_pipeline.py <span class="hl">dedup</span> ./photos <span class="val">--local</span></div>
+    <div class="callout">
+      <strong>Google Drive mode.</strong> Same commands without <code>--local</code>. Replace the path with a
+      Drive folder ID. Requires <code>credentials.json</code> from Google Cloud Console with
+      Drive API enabled.
+    </div>
   </div>
 
 </div>
 
+<!-- ============ SCRIPTS ============ -->
 <script type="module">
   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  import elkLayouts from 'https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk/dist/mermaid-layout-elk.esm.min.mjs';
 
   const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
+  mermaid.registerLayoutLoaders(elkLayouts);
   mermaid.initialize({
     startOnLoad: true,
     theme: 'base',
     look: 'classic',
+    layout: 'elk',
     themeVariables: {
-      primaryColor: isDark ? '#2a2720' : '#fffdf9',
-      primaryBorderColor: isDark ? '#d4a73a' : '#b8860b',
-      primaryTextColor: isDark ? '#ede8e0' : '#1e1b16',
-      secondaryColor: isDark ? '#1e2a3a' : '#f0f5ff',
-      secondaryBorderColor: isDark ? '#7db4e0' : '#1e3a5f',
-      secondaryTextColor: isDark ? '#ede8e0' : '#1e1b16',
-      tertiaryColor: isDark ? '#1a2e1a' : '#f0fdf4',
-      tertiaryBorderColor: isDark ? '#4ade80' : '#166534',
-      tertiaryTextColor: isDark ? '#ede8e0' : '#1e1b16',
-      lineColor: isDark ? '#9e9488' : '#7a7265',
-      fontSize: '14px',
+      primaryColor: isDark ? '#1a2e3c' : '#e6f7fa',
+      primaryBorderColor: isDark ? '#22d3ee' : '#0891b2',
+      primaryTextColor: isDark ? '#d4e4ef' : '#0f2b3c',
+      secondaryColor: isDark ? '#1e293b' : '#f0f9ff',
+      secondaryBorderColor: isDark ? '#38bdf8' : '#0369a1',
+      secondaryTextColor: isDark ? '#d4e4ef' : '#0f2b3c',
+      tertiaryColor: isDark ? '#27201a' : '#fffbeb',
+      tertiaryBorderColor: isDark ? '#fbbf24' : '#b45309',
+      tertiaryTextColor: isDark ? '#d4e4ef' : '#0f2b3c',
+      lineColor: isDark ? '#7ba4bb' : '#5a7d8f',
+      fontSize: '15px',
       fontFamily: "'DM Sans', system-ui, sans-serif",
-      noteBkgColor: isDark ? '#28251f' : '#fef3c7',
-      noteTextColor: isDark ? '#ede8e0' : '#1e1b16',
-      noteBorderColor: isDark ? '#d4a73a' : '#b8860b',
+      noteBkgColor: isDark ? '#1a2e3c' : '#fefce8',
+      noteTextColor: isDark ? '#d4e4ef' : '#0f2b3c',
+      noteBorderColor: isDark ? '#fbbf24' : '#b45309',
     }
   });
 </script>
@@ -887,6 +867,7 @@ python image_asset_pipeline.py \
     var zoom = parseFloat(target.dataset.zoom || '1');
     wrap.classList.toggle('is-zoomed', zoom > 1);
   }
+
   function zoomDiagram(btn, factor) {
     var wrap = btn.closest('.mermaid-wrap');
     var target = wrap.querySelector('.mermaid');
@@ -896,6 +877,7 @@ python image_asset_pipeline.py \
     target.style.transform = 'scale(' + next + ')';
     updateZoomState(wrap);
   }
+
   function resetZoom(btn) {
     var wrap = btn.closest('.mermaid-wrap');
     var target = wrap.querySelector('.mermaid');
@@ -903,6 +885,7 @@ python image_asset_pipeline.py \
     target.style.transform = 'scale(1)';
     updateZoomState(wrap);
   }
+
   document.querySelectorAll('.mermaid-wrap').forEach(function(wrap) {
     wrap.addEventListener('wheel', function(e) {
       if (!e.ctrlKey && !e.metaKey) return;
@@ -915,14 +898,17 @@ python image_asset_pipeline.py \
       target.style.transform = 'scale(' + next + ')';
       updateZoomState(wrap);
     }, { passive: false });
+
     var startX, startY, scrollL, scrollT;
     wrap.addEventListener('mousedown', function(e) {
       if (e.target.closest('.zoom-controls')) return;
       var target = wrap.querySelector('.mermaid');
       if (parseFloat(target.dataset.zoom || '1') <= 1) return;
       wrap.classList.add('is-panning');
-      startX = e.clientX; startY = e.clientY;
-      scrollL = wrap.scrollLeft; scrollT = wrap.scrollTop;
+      startX = e.clientX;
+      startY = e.clientY;
+      scrollL = wrap.scrollLeft;
+      scrollT = wrap.scrollTop;
     });
     window.addEventListener('mousemove', function(e) {
       if (!wrap.classList.contains('is-panning')) return;
